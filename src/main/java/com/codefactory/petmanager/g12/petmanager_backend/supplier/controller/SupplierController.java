@@ -72,7 +72,7 @@ public class SupplierController {
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(defaultValue = "id,asc") String[] sort) {
 
-    Sort.Direction direction = sort[1].equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+    Sort.Direction direction = sort.length > 1 && sort[1].equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
     Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort[0]));
 
     Page<SupplierResponseDTO> result = supplierService.searchSuppliers(name, nit, address, paymentConditionId, pageable);

@@ -153,6 +153,19 @@ class SupplierControllerTest {
         assertEquals(Sort.by(Sort.Direction.DESC, "name"), captor.getValue().getSort());
     }
 
+    @Test
+    void searchSuppliers_whenSortHasNoDirection_defaultsToAsc() throws Exception {
+        when(supplierService.searchSuppliers(isNull(), isNull(), isNull(), isNull(), any(Pageable.class)))
+            .thenReturn(new PageImpl<>(List.of(), PageRequest.of(0, 10), 0));
+
+        mockMvc.perform(get("/api/suppliers/search").param("sort", "name"))
+            .andExpect(status().isOk());
+
+        ArgumentCaptor<Pageable> captor = ArgumentCaptor.forClass(Pageable.class);
+        verify(supplierService).searchSuppliers(isNull(), isNull(), isNull(), isNull(), captor.capture());
+        assertEquals(Sort.by(Sort.Direction.ASC, "name"), captor.getValue().getSort());
+    }
+
     // ---------- crear ----------
 
     @Test
