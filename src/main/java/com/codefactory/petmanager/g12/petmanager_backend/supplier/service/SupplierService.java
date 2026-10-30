@@ -103,6 +103,7 @@ public class SupplierService {
       if (supplierUpdateDTO.getPhoneNumber() != null) existingSupplier.setPhoneNumber(supplierUpdateDTO.getPhoneNumber());
       if (supplierUpdateDTO.getAddress() != null) existingSupplier.setAddress(supplierUpdateDTO.getAddress());
       if (supplierUpdateDTO.getPaymentNotes() != null) existingSupplier.setPaymentNotes(supplierUpdateDTO.getPaymentNotes());
+      if (supplierUpdateDTO.getEmail() != null) existingSupplier.setEmail(supplierUpdateDTO.getEmail());
 
       if (supplierUpdateDTO.getPaymentConditionId() != null) {
           existingSupplier.setPaymentCondition(getPaymentConditionOrThrow(supplierUpdateDTO.getPaymentConditionId()));

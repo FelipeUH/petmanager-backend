@@ -291,6 +291,7 @@ class SupplierServiceTest {
         assertEquals("900123456", supplier.getNit());
         assertEquals("Purina", supplier.getName());
         assertEquals("Calle 10 # 20-30", supplier.getAddress());
+        assertEquals("contacto@purina.com", supplier.getEmail());
         assertSame(paymentCondition, supplier.getPaymentCondition());
         verify(supplierRepository, never()).findByNit(anyString());
         verify(supplierRepository, never()).findByName(anyString());
@@ -301,7 +302,7 @@ class SupplierServiceTest {
     void updateSupplier_whenAllFieldsProvided_updatesAllFields() {
         PaymentCondition newCondition = new PaymentCondition(2, "Crédito 30 días", null);
         SupplierUpdateDTO update = new SupplierUpdateDTO("800999888", "Purina Colombia",
-            "3109876543", "Carrera 50 # 10-20", null, 2, "Notas nuevas");
+            "3109876543", "Carrera 50 # 10-20", "pagos@purina.com", 2, "Notas nuevas");
 
         when(supplierRepository.findById(1)).thenReturn(Optional.of(supplier));
         when(supplierRepository.findByNit("800999888")).thenReturn(Optional.empty());
@@ -315,6 +316,7 @@ class SupplierServiceTest {
         assertEquals("Purina Colombia", supplier.getName());
         assertEquals("3109876543", supplier.getPhoneNumber());
         assertEquals("Carrera 50 # 10-20", supplier.getAddress());
+        assertEquals("pagos@purina.com", supplier.getEmail());
         assertEquals("Notas nuevas", supplier.getPaymentNotes());
         assertSame(newCondition, supplier.getPaymentCondition());
     }
