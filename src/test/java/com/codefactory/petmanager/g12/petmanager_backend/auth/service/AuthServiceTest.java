@@ -165,6 +165,18 @@ class AuthServiceTest {
     }
 
     @Test
+    void login_whenLockExpiredAndFailsAgain_isNotLockedImmediately() {
+        failedAttempts.put(EMAIL, MAX_ATTEMPTS);
+        lastFailedAttempt.put(EMAIL, Instant.now().minus(LOCK_MINUTES + 1, ChronoUnit.MINUTES));
+        when(authenticationManager.authenticate(any())).thenThrow(new BadCredentialsException("bad"));
+
+        failLogin(1);
+
+        assertEquals(1, failedAttempts.get(EMAIL));
+        assertThrows(BadCredentialsException.class, () -> authService.login(EMAIL, "incorrecta"));
+    }
+
+    @Test
     void login_whenAnotherAccountIsLocked_doesNotAffectThisOne() {
         failedAttempts.put("otro@petmanager.com", MAX_ATTEMPTS);
         lastFailedAttempt.put("otro@petmanager.com", Instant.now());

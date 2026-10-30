@@ -76,7 +76,12 @@ public class AuthService {
             return false;
         }
         Instant lastAttempt = lastFailedAttempt.get(email);
-        return lastAttempt != null && lastAttempt.plus(lockTimeMinutes, ChronoUnit.MINUTES).isAfter(Instant.now());
+        if (lastAttempt != null && lastAttempt.plus(lockTimeMinutes, ChronoUnit.MINUTES).isAfter(Instant.now())) {
+            return true;
+        }
+        // El bloqueo expiró: la cuenta vuelve a tener todos los intentos disponibles
+        resetFailedAttempts(email);
+        return false;
     }
 }
 
