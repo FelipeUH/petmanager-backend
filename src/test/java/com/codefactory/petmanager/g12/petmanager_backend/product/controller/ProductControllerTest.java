@@ -2,6 +2,7 @@ package com.codefactory.petmanager.g12.petmanager_backend.product.controller;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -90,6 +91,15 @@ class ProductControllerTest {
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").value(5))
             .andExpect(jsonPath("$.product.id").value(10));
+    }
+
+    @Test
+    void addSupplierProduct_whenParamMissing_returns400WithoutCallingService() throws Exception {
+        mockMvc.perform(post("/api/products/supplier-product").param("supplierId", "1"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value("El parámetro 'productId' es requerido"));
+
+        verifyNoInteractions(productService);
     }
 
     @Test

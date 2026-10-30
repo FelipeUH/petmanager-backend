@@ -17,6 +17,8 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.codefactory.petmanager.g12.petmanager_backend.common.exceptions.dto.ErrorResponse;
 
@@ -81,6 +83,22 @@ class GlobalExceptionHandlerTest {
             new HttpMessageNotReadableException("sin cuerpo", new MockHttpInputMessage(new byte[0]));
 
         assertError(handler.handleMissingBody(ex), HttpStatus.BAD_REQUEST, "Se requiere el cuerpo de la petición");
+    }
+
+    @Test
+    void handleMissingParameter_returns400NamingTheParameter() {
+        MissingServletRequestParameterException ex = new MissingServletRequestParameterException("productId", "int");
+
+        assertError(handler.handleMissingParameter(ex), HttpStatus.BAD_REQUEST, "El parámetro 'productId' es requerido");
+    }
+
+    @Test
+    void handleTypeMismatch_returns400NamingParameterAndValue() {
+        MethodArgumentTypeMismatchException ex = mock(MethodArgumentTypeMismatchException.class);
+        when(ex.getName()).thenReturn("id");
+        when(ex.getValue()).thenReturn("abc");
+
+        assertError(handler.handleTypeMismatch(ex), HttpStatus.BAD_REQUEST, "El parámetro 'id' tiene un valor inválido: abc");
     }
 
     @Test

@@ -109,6 +109,15 @@ class SupplierControllerTest {
     }
 
     @Test
+    void getSupplier_whenIdNotNumeric_returns400() throws Exception {
+        mockMvc.perform(get("/api/suppliers/abc"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value("El parámetro 'id' tiene un valor inválido: abc"));
+
+        verifyNoInteractions(supplierService);
+    }
+
+    @Test
     void getSupplierByNit_returns200() throws Exception {
         when(supplierService.getSupplierByNit("900123456")).thenReturn(purina);
 
